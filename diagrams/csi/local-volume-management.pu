@@ -1,0 +1,10 @@
+@startuml
+participant csi_plugin
+participant volume_manager
+participant alloc_hook
+
+alloc_hook -> volume_manager : PrepareVolume(meta)
+volume_manager -> csi_plugin : NodeStageVolume(per_volume_target_path)
+volume_manager -> csi_plugin : NodePublishVolume(per_alloc_target_path)
+volume_manager -> alloc_hook : Ok(mount_path)
+@enduml

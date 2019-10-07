@@ -1,0 +1,14 @@
+@startuml
+participant csi_plugin
+participant csi_registrar
+participant nomad_client
+
+csi_registrar -> csi_plugin : Probe()
+csi_plugin -> csi_registrar : Ok
+
+csi_registrar -> csi_plugin : GetPluginInfo()
+csi_plugin -> csi_registrar : GetPluginInfoResponse
+
+csi_registrar -> nomad_client : RegisterPlugin()
+nomad_client -> csi_registrar : RegisterPluginResponse
+@enduml
