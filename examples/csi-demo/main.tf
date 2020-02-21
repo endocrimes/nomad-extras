@@ -46,7 +46,7 @@ resource "digitalocean_droplet" "nomad" {
   region = "ams3"
 
   ssh_keys = [
-    "5f:99:f9:3d:59:3f:7d:04:44:90:a7:9f:98:2c:79:2c", # mew ssh key
+    var.do-ssh-key,
     digitalocean_ssh_key.ephemeralkey.fingerprint,
   ]
 
@@ -74,10 +74,10 @@ resource "digitalocean_droplet" "nomad" {
   pushd ~/go/src/github.com/hashicorp
   git clone https://github.com/hashicorp/nomad.git
   pushd ./nomad
-  git checkout f-csi-volumes
+  git checkout ${var.nomad_target_branch}
   make bootstrap
   make dev 2>&1 > ~/nomad.build.log
-  echo "setup complete" ./NOTICE
+  echo "setup complete" ~/NOTICE
   EOF
 
   connection {
@@ -104,8 +104,13 @@ resource "digitalocean_droplet" "nomad" {
   }
 
   provisioner "file" {
-    source      = "resources/"
-    destination = "/root/resources"
+    source      = "resources/client.hcl"
+    destination = "/root/client.hcl"
+  }
+
+  provisioner "file" {
+    source      = "resources/setup.sh"
+    destination = "/root/setup.sh"
   }
 }
 
